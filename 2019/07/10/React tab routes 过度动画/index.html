@@ -1,90 +1,195 @@
-{% extends "_layout.njk" %}
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
 
-{% block css %}
-<link rel="stylesheet" type="text/css" href="{{ url_for("css/page.css") }}">
-<link rel="stylesheet" type="text/css" href="{{ url_for("css/post.css") }}">
-{% endblock %}
-
-{% block title %}{{ page.title }} | {{ config.title }}{% if config.subtitle %} - {{ config.subtitle }}{% endif %}{% endblock %}
-
-{% block content %}
-<div id="post" class="page">
-  {% set post = page %}
-  <article class="article post card{% if theme.animate %} animate{% endif %}" itemscope itemtype="http://schema.org/Article">
-    <div class="post-block">
-      <link itemprop="mainEntityOfPage" href="{{ config.url }}{{ url_for(page.path) }}">
-      <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-       <meta itemprop="name" content="{{ config.author }}">
-       <meta itemprop="description" content="{{ config.description }}">
-       <meta itemprop="image" content="{{ url_for(theme.avatar) }}">
-      </span>
-      <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-       <meta itemprop="name" content="{{ config.title }}">
-      </span>
+  
+  <title>React Tab 过渡动画的实现 | 王世豪的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990import React from &amp;apos;react">
+<meta property="og:type" content="article">
+<meta property="og:title" content="React Tab 过渡动画的实现">
+<meta property="og:url" content="https://wangshihao111.github.io/2019/07/10/React tab routes 过度动画/index.html">
+<meta property="og:site_name" content="王世豪的博客">
+<meta property="og:description" content="123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990import React from &amp;apos;react">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-07-10T05:43:09.854Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="React Tab 过渡动画的实现">
+<meta name="twitter:description" content="123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990import React from &amp;apos;react">
+  
+    <link rel="alternate" href="/blog/atom.xml" title="王世豪的博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/blog/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/blog/" id="logo">王世豪的博客</a>
+      </h1>
+      
     </div>
-    <header class="post-header">
-      <h1 class="post-title" itemprop="name headline">{{ page.title }}</h1>
-      <div class="post-meta">
-        {% if page.date %}
-        <span class="post-date">
-          <i class="far fa-calendar-plus"></i><span><time title="post-date" itemprop="dateCreated datePublished" datetime="{{ moment(post.date).format() }}">{{ date(post.date, config.date_format) }} {{ time(post.date, config.time_format) }}</time></span>
-        </span>
-        {% endif %}
-        {% if page.categories and page.categories.toArray().length %}
-        {% if page.date %}
-        <span class="post-meta-divider divider">|</span>
-        {% endif %}
-        <span class="post-categories">
-          {# About `-`: https://mozilla.github.io/nunjucks/cn/templating.html#part-861ece9d8e5ce60c #}
-          {% for cat in page.categories.toArray() -%}
-          {% if loop.first %}<i class="far fa-folder-open"></i>{% else %}<i class="fas fa-angle-right"></i>{% endif %}<span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="{{ url_for(cat.path) }}" itemprop="url" rel="index"><span itemprop="name">{{ cat.name }}</span></a></span>
-          {%- endfor %}
-        </span>
-        {% endif %}
-        {% if page.comment !== false and theme.comment.enable %}
-        {% if theme.comment.disqus_shortname %}
-        {% if page.categories or page.date %}
-        <span class="post-meta-divider divider">|</span>
-        {% endif %}
-        <span class="post-comment-count">
-          <i class="far fa-comments"></i><span><a href="{{ url_for(page.path) }}#disqus_thread" itemprop="discussionUrl"><span class="post-comment-count disqus-comment-count" data-disqus-identifier="{{ page.path }}" itemprop="commentCount"></span></a></span>
-        </span>
-        {% endif %}
-        {% endif %}
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/blog/">Home</a>
+        
+          <a class="main-nav-link" href="/blog/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/blog/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://wangshihao111.github.io"></form>
       </div>
-    </header>
-    <main class="post-main" itemprop="articleBody">
-      {{ page.content }}
-    </main>
-    <footer class="post-footer">
-      {% if page.tags and page.tags.toArray().length %}
-      <div class="post-tags">
-        {% for tag in page.tags.toArray() %}
-        <a class="post-tag button" href="{{ url_for(tag.path) }}" rel="tag"><i class="fas fa-tags"></i>{{ tag.name }}</a>
-        {% endfor %}
-      </div>
-      {% endif %}
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-React tab routes 过度动画" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/blog/2019/07/10/React tab routes 过度动画/" class="article-date">
+  <time datetime="2019-07-10T02:34:13.954Z" itemprop="datePublished">2019-07-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      React Tab 过渡动画的实现
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br></pre></td><td class="code"><pre><span class="line">import React from &apos;react&apos;;</span><br><span class="line">import &#123; Route, Redirect &#125; from &apos;react-router-dom&apos;;</span><br><span class="line">import &#123; CSSTransition &#125; from &apos;react-transition-group&apos;;</span><br><span class="line"></span><br><span class="line">import &apos;./style.scss&apos;;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * tab 路由动画，基于CSSTransition</span><br><span class="line"> * @param &#123;String classNames, Number timeout, Array routes, Component notFound&#125; props</span><br><span class="line"> * 1. 如果自定义了classNames，则需要提供几个css样式</span><br><span class="line"> *    分别为 -enter, -enter-active, -exit, -exit-active, 另外需要一套</span><br><span class="line"> *    classNames-reverse为前缀的css样式，组件会根据路由的索引决定用什么样的动画</span><br><span class="line"> * 2. 规则： 只要是一该路径开头的豆浆显示，例如 /home/123 home路由也将显示。</span><br><span class="line"> *           这是为了解决多层路由显示问题。</span><br><span class="line"> */</span><br><span class="line">let prevIndex = 0;</span><br><span class="line">let newIndex = 0;</span><br><span class="line"></span><br><span class="line">export default function TransitionedRoutes(props) &#123;</span><br><span class="line">  const routes = props.routes;</span><br><span class="line">  const timeout = props.timeout;</span><br><span class="line">  const classNames = props.classNames;</span><br><span class="line">  const NotFound = props.notFound;</span><br><span class="line">  return (</span><br><span class="line">    &lt;Route&gt;</span><br><span class="line">      &#123;(&#123; location &#125;) =&gt; &#123;</span><br><span class="line">        let hasMatched = routes.some(</span><br><span class="line">          r =&gt; r.path.split(&apos;/&apos;)[1] === location.pathname.split(&apos;/&apos;)[1]</span><br><span class="line">        );</span><br><span class="line">        //如果是 / 开头的，直接按匹配到处理</span><br><span class="line">        // location.pathname === &apos;/&apos; &amp;&amp; (hasMatched = true);</span><br><span class="line">        // if (!hasMatched) &#123;</span><br><span class="line">        //   return &lt;NotFound /&gt;;</span><br><span class="line">        // &#125;</span><br><span class="line">        return (</span><br><span class="line">          &lt;div className=&apos;router-container&apos;&gt;</span><br><span class="line">            &lt;Route</span><br><span class="line">              exact</span><br><span class="line">              path=&apos;/&apos;</span><br><span class="line">              render=&#123;() =&gt; &lt;Redirect to=&#123;routes[props.initIndex].path&#125; /&gt;&#125;</span><br><span class="line">            /&gt;</span><br><span class="line">            &#123;routes.map((&#123; path, Component &#125;, index) =&gt; (</span><br><span class="line">              &lt;Route key=&#123;path&#125; exact path=&#123;path&#125;&gt;</span><br><span class="line">                &#123;p =&gt; &#123;</span><br><span class="line">                  let cssName;</span><br><span class="line">                  const location = p.location.pathname; // 当前的路由地址</span><br><span class="line">                  newIndex = routes.findIndex(</span><br><span class="line">                    v =&gt; v.path === p.history.location.pathname</span><br><span class="line">                  );</span><br><span class="line">                  index === 0 &amp;&amp; (hasMatched = false);</span><br><span class="line">                  // 判断是否匹配到当前路由</span><br><span class="line">                  if (location.match(path)) &#123;</span><br><span class="line">                    cssName =</span><br><span class="line">                      index &gt; prevIndex ? classNames : `$&#123;classNames&#125;-reverse`;</span><br><span class="line">                    prevIndex = index;</span><br><span class="line">                  &#125; else &#123;</span><br><span class="line">                    cssName =</span><br><span class="line">                      newIndex &gt; index ? classNames : `$&#123;classNames&#125;-reverse`;</span><br><span class="line">                  &#125;</span><br><span class="line">                  return (</span><br><span class="line">                    &lt;CSSTransition</span><br><span class="line">                      // 匹配 /path开头的路由</span><br><span class="line">                      in=&#123;</span><br><span class="line">                        p.location.pathname.split(&apos;/&apos;)[1] === path.split(&apos;/&apos;)[1]</span><br><span class="line">                      &#125;</span><br><span class="line">                      timeout=&#123;timeout&#125;</span><br><span class="line">                      classNames=&#123;cssName&#125;</span><br><span class="line">                      unmountOnExit</span><br><span class="line">                    &gt;</span><br><span class="line">                      &lt;Component &#123;...p&#125; /&gt;</span><br><span class="line">                    &lt;/CSSTransition&gt;</span><br><span class="line">                  );</span><br><span class="line">                &#125;&#125;</span><br><span class="line">              &lt;/Route&gt;</span><br><span class="line">            ))&#125;</span><br><span class="line">          &lt;/div&gt;</span><br><span class="line">        );</span><br><span class="line">      &#125;&#125;</span><br><span class="line">    &lt;/Route&gt;</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">TransitionedRoutes.defaultProps = &#123;</span><br><span class="line">  routes: [],</span><br><span class="line">  timeout: 200,</span><br><span class="line">  classNames: &apos;slide-tab&apos;,</span><br><span class="line">  initIndex: 0,</span><br><span class="line">  onNotFound: () =&gt; &#123;&#125;,</span><br><span class="line">  notFound: () =&gt; &lt;div&gt;Not Found&lt;/div&gt;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://wangshihao111.github.io/2019/07/10/React tab routes 过度动画/" data-id="cjxwv9ft4000130ugjnoo3hau" class="article-share-link">Share</a>
+      
+      
     </footer>
-  </article>
-  {% if theme.reward.enable %}
-  {% include "reward.njk" %}
-  {% endif %}
-  {% if page.prev or page.next %}
-  <nav class="page-nav">
-    <div class="page-nav-next page-nav-item">
-      {% if page.next %}
-      <a href="{{ url_for(page.next.path) }}" rel="next" title="{{ page.next.title }}"><i class="fas fa-angle-left"></i><span class="nav-title">{{ page.next.title }}</span></a>
-      {% endif %}
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/blog/2019/07/10/React-单页面过渡/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          React-单页面过渡
+        
+      </div>
+    </a>
+  
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2019/07/">七月 2019</a></li></ul>
     </div>
-    <div class="page-nav-prev page-nav-item">
-      {% if page.prev %}
-      <a href="{{ url_for(page.prev.path) }}" rel="prev" title="{{ page.prev.title }}"><span class="nav-title">{{ page.prev.title }}</span><i class="fas fa-angle-right"></i></a>
-      {% endif %}
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/blog/2019/07/10/React-单页面过渡/">React-单页面过渡</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2019/07/10/React tab routes 过度动画/">React Tab 过渡动画的实现</a>
+          </li>
+        
+      </ul>
     </div>
-  </nav>
-  {% endif %}
-  {% if theme.comment.enable %}
-  {% include "comment.njk" %}
-  {% endif %}
-</div>
-{% endblock %}
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 王世豪&lt;913003120@qq.com&gt;<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/blog/" class="mobile-nav-link">Home</a>
+  
+    <a href="/blog/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/blog/fancybox/jquery.fancybox.css">
+  <script src="/blog/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/blog/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
